@@ -3,4 +3,4 @@ python-telegram-bot==20.3
 instaloader==4.10.1
 instagrapi==1.18.5
 python-dotenv>=0.21.0
-moviepy>=1.0.3
+# moviepy>=1.0.3
