@@ -208,11 +208,19 @@ if __name__ == "__main__":
     logger.info(f"Webhook set to {WEBHOOK_URL}/webhook")
 
     @flask_app.route("/webhook", methods=["POST"])
-    async def webhook():
+    def webhook():
         data = request.get_json(force=True)
         update = Update.de_json(data, app.bot)
-        await app.update_queue.put(update)
+        app.update_queue.put_nowait(update)  # Use put_nowait instead of await put()
         return {"status": "ok"}
+
+
+    # @flask_app.route("/webhook", methods=["POST"])
+    # async def webhook():
+    #     data = request.get_json(force=True)
+    #     update = Update.de_json(data, app.bot)
+    #     await app.update_queue.put(update)
+    #     return {"status": "ok"}
 
     # Run Flask server on the specified PORT (Render requires this)
     flask_app.run(host="0.0.0.0", port=PORT)
