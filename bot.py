@@ -1,6 +1,6 @@
 
 
-# # import moviepy.editor as mp
+# import moviepy.editor as mp
 
 # import os
 # import logging
@@ -112,7 +112,6 @@
 
 
 
-
 import os
 import logging
 from dotenv import load_dotenv
@@ -123,15 +122,11 @@ from instagrapi.exceptions import ChallengeRequired
 from flask import Flask, request
 
 load_dotenv()
-
-logging.basicConfig(
-    format="%(asctime)s - %(levelname)s - %(message)s",
-    level=logging.INFO
-)
+logging.basicConfig(format="%(asctime)s - %(levelname)s - %(message)s", level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-WEBHOOK_URL = os.getenv("WEBHOOK_URL")  # e.g., https://your-app.onrender.com
+WEBHOOK_URL = os.getenv("WEBHOOK_URL")  # Example: https://your-app.onrender.com
 PORT = int(os.environ.get("PORT", 8443))
 
 IG_USERNAME = os.getenv("INSTAGRAM_USERNAME")
@@ -148,7 +143,6 @@ def login_instagram():
     except ChallengeRequired:
         logger.warning("🔐 2FA Challenge required! Sending security code.")
         cl.challenge_resolve()
-        # For deployment, you must handle 2FA outside or disable it for testing.
         code = input("📩 Enter the verification code sent to your phone/email: ")
         cl.challenge_send_security_code(code)
         cl.dump_settings("session.json")
@@ -172,7 +166,6 @@ async def handle_instagram_link(update: Update, context: ContextTypes.DEFAULT_TY
             raise ValueError("Could not extract shortcode.")
 
         logger.info(f"Extracted shortcode: {shortcode}")
-
         media_pk = cl.media_pk_from_code(shortcode)
         media = cl.media_info(media_pk)
 
@@ -191,7 +184,6 @@ async def handle_instagram_link(update: Update, context: ContextTypes.DEFAULT_TY
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(chat_id=update.effective_chat.id, text="👋 Send me a public Instagram reel/post link to repost!")
 
-# Flask app for webhook
 flask_app = Flask(__name__)
 
 if __name__ == "__main__":
@@ -202,25 +194,15 @@ if __name__ == "__main__":
     app.add_handler(CommandHandler("start", start))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_instagram_link))
 
-    # Set webhook
     import asyncio
     asyncio.run(app.bot.set_webhook(url=WEBHOOK_URL + "/webhook"))
-    logger.info(f"Webhook set to {WEBHOOK_URL}/webhook")
+    logger.info(f"📡 Webhook set to {WEBHOOK_URL}/webhook")
 
     @flask_app.route("/webhook", methods=["POST"])
     def webhook():
         data = request.get_json(force=True)
         update = Update.de_json(data, app.bot)
-        app.update_queue.put_nowait(update)  # Use put_nowait instead of await put()
+        app.update_queue.put_nowait(update)
         return {"status": "ok"}
 
-
-    # @flask_app.route("/webhook", methods=["POST"])
-    # async def webhook():
-    #     data = request.get_json(force=True)
-    #     update = Update.de_json(data, app.bot)
-    #     await app.update_queue.put(update)
-    #     return {"status": "ok"}
-
-    # Run Flask server on the specified PORT (Render requires this)
     flask_app.run(host="0.0.0.0", port=PORT)
