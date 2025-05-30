@@ -28,16 +28,34 @@ IG_PASSWORD = os.getenv("INSTAGRAM_PASSWORD")
 # Initialize Instagram client
 cl = Client()
 
+# def login_instagram():
+#     try:
+#         cl.load_settings("session.json")
+#         cl.login(IG_USERNAME, IG_PASSWORD)
+#         cl.dump_settings("session.json")
+#         logger.info(" Logged in using saved session")
+#     except Exception:
+#         cl.login(IG_USERNAME, IG_PASSWORD)
+#         cl.dump_settings("session.json")
+#         logger.info(" Logged in to Instagram successfully.")
+from instagrapi.exceptions import ChallengeRequired
+
 def login_instagram():
     try:
         cl.load_settings("session.json")
         cl.login(IG_USERNAME, IG_PASSWORD)
         cl.dump_settings("session.json")
-        logger.info(" Logged in using saved session")
-    except Exception:
-        cl.login(IG_USERNAME, IG_PASSWORD)
+        logger.info("✅ Logged in using saved session.")
+    except ChallengeRequired:
+        logger.warning("🔐 2FA Challenge required! Sending security code.")
+        cl.challenge_resolve()
+        code = input("📩 Enter the verification code sent to your phone/email: ")
+        cl.challenge_send_security_code(code)
         cl.dump_settings("session.json")
-        logger.info(" Logged in to Instagram successfully.")
+        logger.info("✅ 2FA login successful. Session saved.")
+    except Exception as e:
+        logger.error(f"❌ Instagram login failed: {e}")
+
 
 # Extract shortcode from Instagram URL
 def extract_shortcode(url: str) -> str:
