@@ -12,3 +12,4 @@ instaloader==4.10.1
 instagrapi==1.18.5
 python-dotenv
 moviepy==1.0.3
+flask
