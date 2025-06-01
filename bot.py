@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes
 from instagrapi import Client
+import imageio_ffmpeg
 
 # Load environment variables
 load_dotenv()
