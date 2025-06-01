@@ -5,7 +5,7 @@ instaloader==4.10.1
 instagrapi==1.18.5
 python-dotenv
 # moviepy==2.2.1
-# moviepy>=1.0.3
-# imageio-ffmpeg
+moviepy>=1.0.3
+imageio-ffmpeg
 
 pillow
