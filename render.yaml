@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: telegram-ig-bot
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: ""
+    startCommand: python bot.py
+    autoDeploy: true
+    envVars:
+      - key: TELEGRAM_BOT_TOKEN
+        value: your_telegram_token
+      - key: INSTAGRAM_USERNAME
+        value: your_ig_username
+      - key: INSTAGRAM_PASSWORD
+        value: your_ig_password
