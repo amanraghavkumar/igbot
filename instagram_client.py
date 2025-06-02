@@ -19,10 +19,10 @@ def load_session(cl):
             cl.set_settings(settings)
             try:
                 cl.get_timeline_feed()
-                logger.info("✅ Logged in using saved session")
+                logger.info("Logged in using saved session")
                 return True
             except Exception:
-                logger.warning("⚠️ Saved session is invalid, logging in again")
+                logger.warning("Saved session is invalid, logging in again")
     return False
 
 def login_instagram(username, password):
@@ -32,10 +32,10 @@ def login_instagram(username, password):
     try:
         cl.login(username, password)
         save_session(cl)
-        logger.info("✅ Logged in successfully and session saved")
+        logger.info("Logged in successfully and session saved")
         return cl
     except TwoFactorRequired as e:
-        logger.error("❌ Two-factor authentication is required. Please disable it or use a session login method.")
+        logger.error(" Two-factor authentication is required. Please disable it or use a session login method.")
     except Exception as e:
-        logger.error(f"❌ Failed to login to Instagram: {e}")
+        logger.error(f"Failed to login to Instagram: {e}")
     return None
