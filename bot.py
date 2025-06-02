@@ -1,4 +1,4 @@
-import moviepy as mp
+from moviepy import editor as mp
 import os
 import logging
 from dotenv import load_dotenv
