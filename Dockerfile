@@ -1,7 +1,6 @@
-# Use slim Python image
 FROM python:3.12-slim
 
-# Install system dependencies (ffmpeg is critical for moviepy)
+# Install system dependencies needed by moviepy
 RUN apt-get update && apt-get install -y \
     ffmpeg \
     libsm6 \
@@ -11,15 +10,15 @@ RUN apt-get update && apt-get install -y \
 # Set working directory
 WORKDIR /app
 
-# Copy requirement file and install dependencies
+# Copy requirements and install Python packages
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy rest of the app
+# Debug check for moviepy installation
+RUN python -c "import moviepy.editor; print('✅ moviepy installed')"
+
+# Copy project files
 COPY . .
 
-# Expose port (optional, in case you run a webserver later)
-EXPOSE 8000
-
-# Start the bot
+# Run your bot
 CMD ["python", "bot.py"]
