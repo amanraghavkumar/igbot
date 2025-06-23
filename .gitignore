@@ -14,7 +14,7 @@ __pycache__/
 .venv/
 
 # Session file (optional but recommended to keep private)
-
+session.json
 # System files
 .DS_Store
 Thumbs.db
